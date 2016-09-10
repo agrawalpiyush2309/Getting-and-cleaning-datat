@@ -3,7 +3,7 @@ CodeBook for Tidy UCI HAR Dataset
 
 ## What is it?
 
-This CodeBook describes the data contained in the output of the `run_analysis.R` script contained in this repository. The tidy flat text file can be read using `data.table` to create a data table for further analysis.
+This CodeBook describes the data contained in the output of the `run_analysis.R` script contained in this repository. 
 
 ```R
 tidy_data <- data.table("tidy_data.txt")
@@ -19,18 +19,20 @@ The script generates a combined subset of the original data by extracting the me
 
 The combined subset is further reduced by calculating the mean of the observations by activity and subject pair to generate 180 observations (6 activities * 30 subjects) of the same 68 variables. This dataset is tidied to generate a narrow and lean dataset containing 11880 observations with 4 variables each and is saved as a text file in the current working directory with the name `tidy_data.txt`
 
-## Variable name cleanup
+## cleanup
 
-As part of the _tidying_ process the variable names are cleaned up using the following transformations.
+Transformations
 
 ```R
-filtered_feature_names <- gsub("\\(\\)", "", filtered_feature_names)
-filtered_feature_names <- gsub("Acc", "-acceleration", filtered_feature_names)
-filtered_feature_names <- gsub("Mag", "-Magnitude", filtered_feature_names)
-filtered_feature_names <- gsub("^t(.*)$", "\\1-time", filtered_feature_names)
-filtered_feature_names <- gsub("^f(.*)$", "\\1-frequency", filtered_feature_names)
-filtered_feature_names <- gsub("(Jerk|Gyro)", "-\\1", filtered_feature_names)
-filtered_feature_names <- gsub("BodyBody", "Body", filtered_feature_names)
+features[,"Features"]<-str_replace(features[,"Features"], "^t", "TimeOf")
+features[,"Features"]<-str_replace(features[,"Features"], "^f", "FrequencyOf")
+features[,"Features"]<-str_replace(features[,"Features"], "BodyBody", "Body")
+features[,"Features"]<-str_replace(features[,"Features"], "\\(\\)", "")
+features[,"Features"]<-str_replace(features[,"Features"], "\\(", "")
+features[,"Features"]<-str_replace(features[,"Features"], "\\)", "")
+features[,"Features"]<-str_replace(features[,"Features"], "\\-", "")
+features[,"Features"]<-str_replace(features[,"Features"], "Acc", "acceleration")
+features[,"Features"]<-str_replace(features[,"Features"], "Mag", "Magnitude")
 ```
 
 And finally all variable names are converted into lowercase.
@@ -60,7 +62,7 @@ The activity name with the following possible values.
 
 ### measurement
 
-The name of the measurement for which the mean is calculated. This variable can contain one of the following 66 variables. Please refer the codebook with the original dataset for the explanation of these different variables.
+feature names
 
 - body-acceleration-jerk-magnitude-mean-frequency
 - body-acceleration-jerk-magnitude-mean-time
